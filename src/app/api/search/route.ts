@@ -1,23 +1,35 @@
-import { setValue, getValue, getHitCount } from "@/services/cacheService";
+import { ValidationError } from "yup";
+import { setValue, getValue } from "@/services/cacheService";
+import { searchMovies } from "@/services/tmdbService";
+import { searchSchema } from "@/lib/validations/searchMovie";
+import { getStringParam } from "@/utils";
 
 export const dynamic = "force-dynamic";
 
-const testKey = "something";
-
-type TestObj = {
-  name: string;
-};
-
 export async function GET(request: Request) {
-  const cached = await getValue<TestObj>(testKey);
-  console.log(await getHitCount(testKey));
-  console.log(cached?.name);
+  try {
+    const { searchParams } = new URL(request.url);
 
-  if (cached === null) {
-    const testObj: TestObj = { name: "Levente" };
-    await setValue(testKey, testObj, 120);
-    return new Response(JSON.stringify({ test: testObj }));
+    const validated = await searchSchema.validate({
+      query: getStringParam(searchParams, "query"),
+      page: getStringParam(searchParams, "page"),
+    });
+
+    const cached = await getValue(validated.query);
+
+    let result = cached;
+
+    if (!cached) {
+      const current = await searchMovies(validated.query);
+      result = current;
+      await setValue(validated.query, current, 3600);
+    }
+
+    return new Response(JSON.stringify(result));
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return new Response(error.message, { status: 400 });
+    }
+    console.error(error);
   }
-
-  return new Response(JSON.stringify({ test: cached }));
 }
