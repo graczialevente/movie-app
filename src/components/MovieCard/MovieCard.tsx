@@ -17,14 +17,14 @@ export function MovieCard({ movie }: MovieCardProps) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-lg">
       <img
-        className="h-64 w-full object-cover"
+        className="aspect-[2/3] w-full"
         src={`${IMAGE_BASE_PATH}${posterPath}`}
         alt={title}
       />
       <div className="p-4">
-        <h2 className="mb-2 text-xl font-bold">{title}</h2>
+        <h2 className="mb-1 text-lg font-bold text-black">{title}</h2>
         <p className="mb-4 text-gray-600">Release Date: {releaseDate}</p>
-        <p className="text-gray-700">{overview}</p>
+        <p className="text-sm text-gray-700">{overview}</p>
       </div>
     </div>
   );

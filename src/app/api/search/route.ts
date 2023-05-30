@@ -15,14 +15,15 @@ export async function GET(request: Request) {
       page: getStringParam(searchParams, "page"),
     });
 
-    const cached = await getValue(validated.query);
+    const cacheKey = `${validated.query}_${validated.page}`;
+    const cached = await getValue(cacheKey);
 
     let result = cached;
 
     if (!cached) {
-      const current = await searchMovies(validated.query);
+      const current = await searchMovies(validated.query, validated.page);
       result = current;
-      await setValue(validated.query, current, 3600);
+      await setValue(cacheKey, current, 120);
     }
 
     return new Response(JSON.stringify(result));
