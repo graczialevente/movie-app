@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w500";
 
@@ -14,11 +15,17 @@ type MovieCardProps = {
 export function MovieCard({ movie }: MovieCardProps) {
   const { title, posterPath, releaseDate, overview } = movie;
 
+  const imagePath = posterPath
+    ? `${IMAGE_BASE_PATH}${posterPath}`
+    : "/no-image.png";
+
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-md shadow-gray-700">
-      <img
-        className="aspect-[2/3] w-full"
-        src={`${IMAGE_BASE_PATH}${posterPath}`}
+      <Image
+        className="aspect-[2/3] w-full shadow-md shadow-gray-100"
+        width={500}
+        height={750}
+        src={imagePath}
         alt={title}
       />
       <div className="p-4">
