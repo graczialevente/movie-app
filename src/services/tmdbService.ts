@@ -22,7 +22,7 @@ type Movie = {
   vote_count: number;
 };
 
-export type SearchMoviesResponse = {
+type SearchMoviesResponse = {
   page: number;
   results: Movie[];
   total_pages: number;
