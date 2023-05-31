@@ -14,6 +14,12 @@ export async function setValue(key: string, value: object, ttl: number) {
 
 export async function getValue<T>(key: string): Promise<T | null> {
   try {
+    const isKeyExists = await redis.exists(key);
+
+    if (!isKeyExists) {
+      return null;
+    }
+
     const result = await redis.multi().get(key).incr(`hits:${key}`).exec();
     const value = result?.[0][1] as string | null;
 
@@ -24,12 +30,12 @@ export async function getValue<T>(key: string): Promise<T | null> {
   }
 }
 
-export async function getHitCount(key: string): Promise<number> {
+export async function getHitCount(key: string): Promise<number | null> {
   try {
     const hitCount = await redis.get(`hits:${key}`);
-    return hitCount ? parseInt(hitCount) : 0;
+    return hitCount ? parseInt(hitCount) : null;
   } catch (error) {
     console.error("Error getting hit count:", error);
-    return 0;
+    return null;
   }
 }

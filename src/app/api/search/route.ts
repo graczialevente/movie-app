@@ -23,7 +23,10 @@ export async function GET(request: Request) {
     if (!cached) {
       const current = await searchMovies(validated.query, validated.page);
       result = current;
-      await setValue(cacheKey, current, 120);
+
+      if (current.results.length > 0) {
+        await setValue(cacheKey, current, 120);
+      }
     }
 
     return new Response(JSON.stringify(result));
