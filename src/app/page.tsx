@@ -5,21 +5,26 @@ import { SearchMovieResponse } from "@/services/tmdbService";
 import { MovieList } from "@/components/MovieList";
 import { Paginator } from "@/components/Paginator";
 import { SearchForm } from "@/components/SearchForm";
+import { Loader } from "@/components/Loader";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<SearchMovieResponse>();
 
   useEffect(() => {
     const handleSearch = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(`/api/search`, {
           params: { query: query, page: page },
         });
         setData(response.data);
       } catch (error) {
         console.error("Error searching movies:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -39,26 +44,29 @@ export default function Home() {
       </div>
 
       <div className="container mx-auto max-w-7xl px-7 pb-7">
-        {data && (
-          <MovieList
-            movies={data.results.map((movie) => ({
-              id: movie.id,
-              title: movie.title,
-              overview: movie.overview,
-              posterPath: movie.poster_path,
-              releaseDate: movie.release_date,
-            }))}
-          />
-        )}
-
-        {data && (
-          <div className="mt-6">
-            <Paginator
-              onPageChange={setPage}
-              page={data?.page || 1}
-              totalPages={data?.total_pages || 1}
+        {isLoading ? (
+          <Loader />
+        ) : data && data.results.length > 0 ? (
+          <>
+            <MovieList
+              movies={data.results.map((movie) => ({
+                id: movie.id,
+                title: movie.title,
+                overview: movie.overview,
+                posterPath: movie.poster_path,
+                releaseDate: movie.release_date,
+              }))}
             />
-          </div>
+            <div className="mt-6">
+              <Paginator
+                onPageChange={setPage}
+                page={data?.page || 1}
+                totalPages={data?.total_pages || 1}
+              />
+            </div>
+          </>
+        ) : (
+          <p className="text-center text-white">no content</p>
         )}
       </div>
     </main>

@@ -13,7 +13,7 @@ export function SearchForm({ onSearch }: SearchFormProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSearch(searchTerm);
+    onSearch(searchTerm.trim());
   };
 
   return (

@@ -1,6 +1,10 @@
 import { redis } from "@/lib/redis";
 
-export async function setValue(key: string, value: object, ttl: number) {
+export async function setValue(
+  key: string,
+  value: object,
+  ttl: number
+): Promise<void> {
   try {
     await redis
       .multi()
