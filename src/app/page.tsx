@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { SearchMovieResponse } from "@/services/tmdbService";
+import { SearchMoviesResponse } from "@/services/tmdbService";
 import { MovieList } from "@/components/MovieList";
 import { Paginator } from "@/components/Paginator";
 import { SearchForm } from "@/components/SearchForm";
@@ -11,7 +11,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<SearchMovieResponse>();
+  const [data, setData] = useState<SearchMoviesResponse>();
 
   useEffect(() => {
     if (!query.length) {

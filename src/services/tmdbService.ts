@@ -21,7 +21,7 @@ type Movie = {
   vote_count: number;
 };
 
-export type SearchMovieResponse = {
+export type SearchMoviesResponse = {
   page: number;
   results: Movie[];
   total_pages: number;
@@ -30,7 +30,7 @@ export type SearchMovieResponse = {
 
 export async function searchMovies(query: string, page?: number) {
   try {
-    const response = await axios.get<SearchMovieResponse>(
+    const response = await axios.get<SearchMoviesResponse>(
       `${BASE_URL}/search/movie`,
       {
         params: {
