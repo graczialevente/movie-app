@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { MovieData } from "@/types/common";
+import { MovieData } from "@/types/movie";
 
 const IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w500";
 

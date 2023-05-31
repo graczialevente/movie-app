@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MovieList } from "@/components/MovieList";
 import { Paginator } from "@/components/Paginator";
 import { SearchForm } from "@/components/SearchForm";
 import { Loader } from "@/components/Loader";
 import { makeRequest } from "@/utils/makeRequest";
-import { CachedMovieList } from "@/types/common";
+import { CachedMovieList } from "@/types/movie";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -49,7 +50,9 @@ export default function Home() {
       return null;
     }
 
-    return data.results.length > 0 ? (
+    const hasMovieResults = data.results.length > 0;
+
+    return hasMovieResults ? (
       <>
         <MovieList movies={data.results} />
         <div className="mt-6">
@@ -72,7 +75,9 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center">
-      <h1 className="mb-7 mt-7 text-4xl font-bold">MOVIE APP</h1>
+      <h1 className="mb-7 mt-7 text-4xl font-bold">
+        <Link href="/">MOVIE APP</Link>
+      </h1>
       <div
         className="sticky top-0 z-50 mb-6 w-full py-4"
         style={{ backgroundColor: "rgb(var(--background-rgb))" }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { MovieData } from "@/types/common";
+import { MovieData } from "@/types/movie";
 import { MovieCard } from "./MovieCard";
 
 type MovieListProps = {

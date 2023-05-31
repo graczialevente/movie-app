@@ -3,7 +3,7 @@ import { setValue, getValue, getHitCount } from "@/services/cacheService";
 import { searchMovies } from "@/services/tmdbService";
 import { searchSchema } from "@/lib/validations/searchMovie";
 import { getStringParam } from "@/utils";
-import { MoviesList, CachedMovieList } from "@/types/common";
+import { MoviesList, CachedMovieList } from "@/types/movie";
 
 export const dynamic = "force-dynamic";
 

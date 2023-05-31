@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getEnvVariable } from "@/utils";
-import { MoviesList } from "@/types/common";
+import { MoviesList } from "@/types/movie";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = getEnvVariable("TMDB_API_KEY");
