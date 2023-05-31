@@ -31,7 +31,9 @@ export function MovieCard({ movie }: MovieCardProps) {
       <div className="p-4">
         <h2 className="mb-1 text-lg font-bold text-black">{title}</h2>
         <p className="mb-4 text-gray-600">Release Date: {releaseDate}</p>
-        <p className="text-sm text-gray-700">{overview}</p>
+        <p className="text-sm text-gray-700">
+          {overview || "[Overview not available]"}
+        </p>
       </div>
     </div>
   );
