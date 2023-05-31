@@ -15,7 +15,7 @@ export function MovieCard({ movie }: MovieCardProps) {
   const { title, posterPath, releaseDate, overview } = movie;
 
   return (
-    <div className="overflow-hidden rounded-lg bg-white shadow-lg">
+    <div className="overflow-hidden rounded-lg bg-white shadow-md shadow-gray-700">
       <img
         className="aspect-[2/3] w-full"
         src={`${IMAGE_BASE_PATH}${posterPath}`}

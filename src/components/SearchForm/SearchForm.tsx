@@ -17,7 +17,7 @@ export function SearchForm({ onSearch }: SearchFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-3xl gap-3">
+    <form onSubmit={handleSubmit} className="flex w-full max-w-3xl gap-4">
       <input
         placeholder="Search movies..."
         className="w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 leading-tight text-gray-700 focus:border-green-500 focus:outline-none"

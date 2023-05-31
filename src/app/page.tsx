@@ -27,13 +27,18 @@ export default function Home() {
   }, [page, query]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-7">
-      <h1 className="mb-7 text-4xl font-bold">MOVIE APP</h1>
-      <div className="container mx-auto max-w-7xl">
-        <div className="sticky top-0 z-50 mb-6 flex justify-center bg-black py-4 shadow-md">
+    <main className="flex flex-col items-center">
+      <h1 className="mb-7 mt-7 text-4xl font-bold">MOVIE APP</h1>
+      <div
+        className="sticky top-0 z-50 mb-6 w-full py-4"
+        style={{ backgroundColor: "rgb(var(--background-rgb))" }}
+      >
+        <div className="container mx-auto flex max-w-7xl  justify-center px-7">
           <SearchForm onSearch={(query) => setQuery(query)} />
         </div>
+      </div>
 
+      <div className="container mx-auto max-w-7xl px-7 pb-7">
         {data && (
           <MovieList
             movies={data.results.map((movie) => ({
