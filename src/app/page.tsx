@@ -1,17 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { SearchMoviesResponse } from "@/services/tmdbService";
 import { MovieList } from "@/components/MovieList";
 import { Paginator } from "@/components/Paginator";
 import { SearchForm } from "@/components/SearchForm";
 import { Loader } from "@/components/Loader";
+import { makeRequest } from "@/utils/makeRequest";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<SearchMoviesResponse>();
+
+  const changeSearchQuery = (query: string) => {
+    setQuery(query);
+    setPage(1);
+  };
 
   useEffect(() => {
     if (!query.length) {
@@ -21,12 +27,15 @@ export default function Home() {
     const handleSearch = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/api/search`, {
+        const responseData = await makeRequest<SearchMoviesResponse>({
+          url: "/api/search",
+          method: "GET",
           params: { query: query, page: page },
         });
-        setData(response.data);
+        setData(responseData);
+        setError("");
       } catch (error) {
-        console.error("Error searching movies:", error);
+        setError((error as Error).message);
       } finally {
         setIsLoading(false);
       }
@@ -72,9 +81,17 @@ export default function Home() {
         style={{ backgroundColor: "rgb(var(--background-rgb))" }}
       >
         <div className="container mx-auto flex max-w-7xl  justify-center px-7">
-          <SearchForm onSearch={(query) => setQuery(query)} />
+          <SearchForm onSearch={(query) => changeSearchQuery(query)} />
         </div>
       </div>
+
+      {error && (
+        <div className="container mx-auto max-w-7xl px-7 pb-7">
+          <p className="border border-orange-900 bg-red-600 p-3 text-white">
+            {error}
+          </p>
+        </div>
+      )}
 
       <div className="container mx-auto max-w-7xl px-7 pb-7">
         {isLoading ? <Loader /> : renderMovieList()}
