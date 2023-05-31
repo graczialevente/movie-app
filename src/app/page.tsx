@@ -14,6 +14,10 @@ export default function Home() {
   const [data, setData] = useState<SearchMovieResponse>();
 
   useEffect(() => {
+    if (!query.length) {
+      return;
+    }
+
     const handleSearch = async () => {
       try {
         setIsLoading(true);
@@ -31,6 +35,35 @@ export default function Home() {
     handleSearch();
   }, [page, query]);
 
+  const renderMovieList = () => {
+    if (!data) {
+      return null;
+    }
+
+    return data.results.length > 0 ? (
+      <>
+        <MovieList
+          movies={data.results.map((movie) => ({
+            id: movie.id,
+            title: movie.title,
+            overview: movie.overview,
+            posterPath: movie.poster_path,
+            releaseDate: movie.release_date,
+          }))}
+        />
+        <div className="mt-6">
+          <Paginator
+            onPageChange={setPage}
+            page={data.page}
+            totalPages={data.total_pages}
+          />
+        </div>
+      </>
+    ) : (
+      <p className="text-center text-white">no content</p>
+    );
+  };
+
   return (
     <main className="flex flex-col items-center">
       <h1 className="mb-7 mt-7 text-4xl font-bold">MOVIE APP</h1>
@@ -44,30 +77,7 @@ export default function Home() {
       </div>
 
       <div className="container mx-auto max-w-7xl px-7 pb-7">
-        {isLoading ? (
-          <Loader />
-        ) : data && data.results.length > 0 ? (
-          <>
-            <MovieList
-              movies={data.results.map((movie) => ({
-                id: movie.id,
-                title: movie.title,
-                overview: movie.overview,
-                posterPath: movie.poster_path,
-                releaseDate: movie.release_date,
-              }))}
-            />
-            <div className="mt-6">
-              <Paginator
-                onPageChange={setPage}
-                page={data?.page || 1}
-                totalPages={data?.total_pages || 1}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="text-center text-white">no content</p>
-        )}
+        {isLoading ? <Loader /> : renderMovieList()}
       </div>
     </main>
   );
