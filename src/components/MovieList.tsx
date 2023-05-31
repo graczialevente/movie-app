@@ -1,14 +1,9 @@
 import React from "react";
+import { MovieData } from "@/types/common";
 import { MovieCard } from "./MovieCard";
 
 type MovieListProps = {
-  movies: {
-    id: number;
-    title: string;
-    posterPath: string;
-    releaseDate: string;
-    overview: string;
-  }[];
+  movies: MovieData[];
 };
 
 export function MovieList({ movies }: MovieListProps) {

@@ -1,18 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { SearchMoviesResponse } from "@/services/tmdbService";
 import { MovieList } from "@/components/MovieList";
 import { Paginator } from "@/components/Paginator";
 import { SearchForm } from "@/components/SearchForm";
 import { Loader } from "@/components/Loader";
 import { makeRequest } from "@/utils/makeRequest";
+import { CachedMovieList } from "@/types/common";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<SearchMoviesResponse>();
+  const [data, setData] = useState<CachedMovieList>();
 
   const changeSearchQuery = (query: string) => {
     setQuery(query);
@@ -27,7 +27,7 @@ export default function Home() {
     const handleSearch = async () => {
       try {
         setIsLoading(true);
-        const responseData = await makeRequest<SearchMoviesResponse>({
+        const responseData = await makeRequest<CachedMovieList>({
           url: "/api/search",
           method: "GET",
           params: { query: query, page: page },
@@ -51,22 +51,19 @@ export default function Home() {
 
     return data.results.length > 0 ? (
       <>
-        <MovieList
-          movies={data.results.map((movie) => ({
-            id: movie.id,
-            title: movie.title,
-            overview: movie.overview,
-            posterPath: movie.poster_path,
-            releaseDate: movie.release_date,
-          }))}
-        />
+        <MovieList movies={data.results} />
         <div className="mt-6">
           <Paginator
             onPageChange={setPage}
             page={data.page}
-            totalPages={data.total_pages}
+            totalPages={data.totalPages}
           />
         </div>
+        {data.hitCount !== null && (
+          <p className="mt-6 text-center text-xs text-gray-400">
+            This result was served from cache {data.hitCount} times
+          </p>
+        )}
       </>
     ) : (
       <p className="text-center text-white">no content</p>

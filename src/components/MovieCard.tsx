@@ -1,15 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import { MovieData } from "@/types/common";
 
 const IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w500";
 
 type MovieCardProps = {
-  movie: {
-    title: string;
-    posterPath: string;
-    releaseDate: string;
-    overview: string;
-  };
+  movie: MovieData;
 };
 
 export function MovieCard({ movie }: MovieCardProps) {

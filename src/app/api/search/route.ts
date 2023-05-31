@@ -1,8 +1,9 @@
 import { ValidationError } from "yup";
-import { setValue, getValue } from "@/services/cacheService";
+import { setValue, getValue, getHitCount } from "@/services/cacheService";
 import { searchMovies } from "@/services/tmdbService";
 import { searchSchema } from "@/lib/validations/searchMovie";
 import { getStringParam } from "@/utils";
+import { MoviesList, CachedMovieList } from "@/types/common";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,22 @@ export async function GET(request: Request) {
     });
 
     const cacheKey = `${validated.query}_${validated.page}`;
-    const cached = await getValue(cacheKey);
+    const cached = await getValue<MoviesList>(cacheKey);
+    const hitCount = await getHitCount(cacheKey);
 
-    let result = cached;
+    let result: CachedMovieList;
 
-    if (!cached) {
+    if (cached) {
+      result = {
+        ...cached,
+        hitCount: hitCount,
+      };
+    } else {
       const current = await searchMovies(validated.query, validated.page);
-      result = current;
+      result = {
+        ...current,
+        hitCount: null,
+      };
 
       if (current.results.length > 0) {
         await setValue(cacheKey, current, 120);
@@ -34,6 +44,7 @@ export async function GET(request: Request) {
     if (error instanceof ValidationError) {
       return new Response(error.message, { status: 400 });
     }
-    console.error(error);
+
+    return new Response((error as Error).message, { status: 500 });
   }
 }
